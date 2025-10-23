@@ -1,19 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TelegrafModule } from 'nestjs-telegraf';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { BotService } from './bot.service';
 import { BotUpdate } from './bot.update';
+import { Qori } from './models/bot.model';
+import { DailyRead } from './models/daily-read.model';
 
 @Module({
-  imports: [
-    ConfigModule,
-    TelegrafModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        token: configService.get<string>('TELEGRAM_BOT_TOKEN')!,
-      }),
-      inject: [ConfigService],
-    }),
-  ],
-  providers: [BotUpdate],
+  imports: [SequelizeModule.forFeature([Qori, DailyRead])],
+  providers: [BotService, BotUpdate],
 })
 export class BotModule { }
